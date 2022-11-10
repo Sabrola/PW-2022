@@ -3,6 +3,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import { Link } from 'react-router-dom';
 
 export default function MainMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -16,20 +17,20 @@ export default function MainMenu() {
 
   return (
     <div>
-      <IconButton 
-        id="basic-button"
-        edge="start" 
-        color="inherit" 
-        aria-label="menu"
-        sx={{ mr: 2 }}
-        aria-controls={open ? 'basic-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        onClick={handleClick}
-      >
-        <MenuIcon />
-      </IconButton>
-      
+
+        <IconButton 
+            edge="start" 
+            color="inherit" 
+            aria-label="menu"
+            aria-controls={open ? 'basic-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? 'true' : undefined}
+            onClick={handleClick} 
+            sx={{ mr: 2 }}
+        >
+            <MenuIcon />
+        </IconButton>
+
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}
@@ -39,9 +40,17 @@ export default function MainMenu() {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        
+        <MenuItem onClick={handleClose}
+          component={ Link } Link to="/Karango">
+            Listagem de Karangos
+        </MenuItem>
+
+        <MenuItem onClick={handleClose}
+          component={ Link } to="/Karango/novo" >
+            Cadastro de Karangos
+        </MenuItem>
+
       </Menu>
     </div>
   );
