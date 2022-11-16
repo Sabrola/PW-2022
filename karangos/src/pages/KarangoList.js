@@ -2,36 +2,62 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import api from '../lib/api'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 
 const columns = [
-    { field: 'id', headerName: 'ID', width: 90 },
     {
-      field: 'firstName',
-      headerName: 'First name',
-      width: 150,
-      editable: true,
+      field: 'id',            //Campo nos dados retornados
+      headerName: 'Cód.',
+      type: 'number',          //Coluna fica alinhada a direita
+      width: 90 },
+    {
+      field: 'marca',
+      headerName: 'Marca/Modelo',
+      width: 300,
+      valueGetter: params =>params.row?.marca + ' ' + params.row?.modelo
     },
     {
-      field: 'lastName',
-      headerName: 'Last name',
-      width: 150,
-      editable: true,
-    },
-    {
-      field: 'age',
-      headerName: 'Age',
+      field: 'ano_fabricacao',
+      headerName: 'Ano Fabr.',
       type: 'number',
       width: 110,
-      editable: true,
     },
     {
-      field: 'fullName',
-      headerName: 'Full name',
-      description: 'This column has a value getter and is not sortable.',
-      sortable: false,
-      width: 160,
-      valueGetter: (params) =>
-        `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+      field: 'cor',
+      headerName: 'Cor',
+      headerAlign: 'center',  //Alinhamento do cabeçalho
+      align: 'center',        //Alinhamento dos dados
+      width: 110,
+    },
+    {
+      field: 'placa',
+      headerName: 'Placa',
+      headerAlign: 'center',  //Alinhamento do cabeçalho
+      align: 'center',        //Alinhamento dos dados
+      width: 110,
+    },
+    {
+      field: 'importado',
+      headerName: 'Importado',
+      headerAlign: 'center',  //Alinhamento do cabeçalho
+      align: 'center',        //Alinhamento dos dados
+      width: 110,
+      renderCell: params => (
+      parseInt(params.row?.importado) ? < CheckCircleIcon /> : < RadioButtonUncheckedIcon />
+      )
+    },
+    {
+      field: 'preco',
+      headerName: 'Preço Venda',
+      type: 'number',
+      width: 120,
+      valueGetter: params => (
+        //Formatando os preços para números conforme usados no Brasil (pt-BR) e em
+        //moeda real brasileira (BRL).
+        Number(params.row?.preco).toLocaleString(
+          'pt-BR', { style: 'currency', currency: 'BLR'})
+      )
     },
   ];
   
@@ -49,6 +75,11 @@ const columns = [
 
 export default function KarangoList() {
 
+    const [state, setState] = React.useState({
+      karangos: [] //Vetor vazio.
+    })
+    const {karangos} = state
+
     //useEffect com vetor de dependncias vazio para ser executado apenas uma vez
     //no momento da montagem do componente
     React.useEffect(() => { //Buscar os dados da API remota
@@ -58,10 +89,12 @@ export default function KarangoList() {
     async function fetchData() {
         try {
             const response = await api.get('karangos')
-            //Re-armazenar o response em uma varialvel de estado
+            //Armazenar o response em uma varialvel de estado
+            console.log({RESPONSE: response.data})
+            setState({...state, karangos: response.data})
         }
         catch (error){
-            alert(':/' + error.message)
+            alert('ERRRO' + error.message)
         }
     }
 
@@ -72,13 +105,12 @@ export default function KarangoList() {
         
         <Box sx={{ height: 400, width: '100%' }}>
             <DataGrid
-            rows={rows}
+            rows={karangos}
             columns={columns}
-            pageSize={5}
+            pageSize={10}
             rowsPerPageOptions={[5]}
-            checkboxSelection
+            autoHeight
             disableSelectionOnClick
-            experimentalFeatures={{ newEditingApi: true }}
         />
 
         </Box>
