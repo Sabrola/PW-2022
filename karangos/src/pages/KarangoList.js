@@ -4,8 +4,14 @@ import { DataGrid } from '@mui/x-data-grid';
 import api from '../lib/api'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import IconButton from '@mui/material/IconButton'
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
-const columns = [
+
+export default function KarangoList() {
+
+  const columns = [
     {
       field: 'id',            //Campo nos dados retornados
       headerName: 'Cód.',
@@ -59,26 +65,49 @@ const columns = [
           'pt-BR', { style: 'currency', currency: 'BLR'})
       )
     },
+    {
+      field: 'editar',
+      headerName: 'Editar',
+      headerAlign: 'center',
+      align: 'center',
+      width: 90,
+      renderCell: params => (
+        <IconButton aria-label = 'Editar'>
+          < EditIcon />
+        </IconButton>
+      )
+    },
+    {
+      field: 'excluir',
+      headerName: 'Excluir',
+      headerAlign: 'center',
+      align: 'center',
+      width: 90,
+      renderCell: params => (
+        <IconButton aria-label = 'Excluir' onClick={() => handleDeleteClick(params.id)}>
+          < DeleteForeverIcon color="error" />
+        </IconButton>
+      )
+    },
   ];
-  
-  const rows = [
-    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-  ];
-
-export default function KarangoList() {
 
     const [state, setState] = React.useState({
       karangos: [] //Vetor vazio.
     })
     const {karangos} = state
+
+    async function handleDeleteClick(id) {
+      if (window.confirm('Deseja realmente excluir este item?')) {
+        try {
+          await api.delete(`karangos/${id}`)
+          fetchData()
+          window.alert('Item excluído com sucesso.')
+          //Recarrega os dados da grid
+        } catch(error) {
+          window.alert('ERRO: Não foi possível excluir.\nMotivo:' + error.message)
+        }
+      }
+    }
 
     //useEffect com vetor de dependncias vazio para ser executado apenas uma vez
     //no momento da montagem do componente
@@ -105,6 +134,16 @@ export default function KarangoList() {
         
         <Box sx={{ height: 400, width: '100%' }}>
             <DataGrid
+            sx={{
+              //Esconde os botões de editar e excluir na visualozação normal.
+              '& .MuiDataGrid-row button': {
+                visibility: 'hidden'
+              },
+              //Retorna a visibilidade dos botões quando o mouse estiver em cima.
+              '& .MuiDataGrid-row:hover button': {
+                visibility: 'visible'
+              },
+            }}
             rows={karangos}
             columns={columns}
             pageSize={10}
