@@ -51,6 +51,11 @@ export default function MainMenu() {
             Cadastro de Karangos
         </MenuItem>
 
+        <MenuItem onClick={handleClose}
+          component={ Link } Link to="/cliente">
+            Listagem de Clientes
+        </MenuItem>
+
       </Menu>
     </div>
   );
