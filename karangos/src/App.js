@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { yellow, pink } from '@mui/material/colors'
 import KarangoList from './pages/karangoList'
 import karangoForm from './pages/karangoForm'
+import ClientList from './pages/ClienteList';
 
 const customTheme = createTheme({
   palette: {
@@ -39,6 +40,7 @@ function App() {
               <Routes>
                 <Route path='/karango' element={< KarangoList />} />
                 <Route path='/karango/novo' element={< karangoForm />} />
+                <Route path='/clientes' element={< ClientList />} />
               </Routes>
             </Box>
           </BrowserRouter>
