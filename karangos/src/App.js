@@ -7,6 +7,7 @@ import { yellow, pink } from '@mui/material/colors'
 import KarangoList from './pages/karangoList'
 import karangoForm from './pages/karangoForm'
 import ClientList from './pages/ClienteList';
+import StartPage from './pages/StartPage' ;
 
 const customTheme = createTheme({
   palette: {
@@ -38,6 +39,7 @@ function App() {
 
             <Box component="main" sx={{ m: '24px' /* Margin: '24px */ }} >
               <Routes>
+                <Route path="/" element={< StartPage /> } />
                 <Route path='/karango' element={< KarangoList />} />
                 <Route path='/karango/novo' element={< karangoForm />} />
                 <Route path='/clientes' element={< ClientList />} />
